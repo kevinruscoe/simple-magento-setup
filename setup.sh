@@ -24,7 +24,7 @@ apt-get -y install apache2 php7.4 php7.4-mbstring php7.4-intl php7.4-gd php7.4-x
 
 # reloadi elasticsearch
 echo "\033[0;32m"
-echo "> Reloaing elasticsearch"
+echo "> Reloading elasticsearch"
 echo "\033[0m"
 sudo /bin/systemctl daemon-reload
 sudo /bin/systemctl enable elasticsearch.service
