@@ -98,7 +98,7 @@ ufw allow "Apache Full"
 
 # install magento
 echo "\033[0;32m"
-echo "> Hello! There are a couple of things YOU need to do"
+echo "> Hello! You might want to copy the following to a text doc because composer's output is massive. However, there are a few things YOU need to do"
 echo "> 1. Create a database"
 echo "> READ: https://devdocs.magento.com/guides/v2.4/install-gde/prereq/mysql.html#instgde-prereq-mysql-config"
 echo "> run"
