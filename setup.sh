@@ -144,23 +144,29 @@ echo '--use-rewrites=1'
 echo ""
 
 echo "> 5. Enable Cron"
-echo "> You need to add the www-data cron"
+echo "> You need to add the www-data cron."
 echo "> run"
 echo 'sudo -u www-data php bin/magento cron:install'
 echo ""
 
-echo "> 6. Other Stuff"
-echo "> 6.1 Disable 2FA"
-echo "> Mangeto now comes with 2FA out of the box. If you need to disable it."
+echo "> 6. Optional Stuff"
+echo ""
+
+echo "> 6.1 Disable admin 2FA"
 echo "> run"
 echo 'bin/magento module:disable Magento_TwoFactorAuth'
 echo 'bin/magento setup:di:compile'
 echo ""
 
-echo "> 6.2. The Magento docs recommends install ntp"
+echo "> 6.2. Install ntp"
 echo "> run"
 echo 'apt-get -y install ntp'
 echo '> Hit Y during installation'
 echo ""
+
+echo "> 6.3. Sample data"
+echo "> run"
+echo "bin/magento sampledata:deploy"
+echo "bin/magento setup:upgrade"
 
 echo "\033[0m"
