@@ -113,7 +113,7 @@ echo "> 2. Install Mangeto via composer"
 echo "> READ: https://devdocs.magento.com/guides/v2.4/install-gde/composer.html#get-the-metapackage"
 echo "> You'll need to go to https://marketplace.magento.com/customer/accessKeys/ to get your access keys"
 echo "> run"
-echo "composer create-project --quiet --repository-url=https://repo.magento.com/ magento/project-community-edition /var/www/html"
+echo "composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition /var/www/html"
 echo ""
 
 echo "> 3. Clean up permissions"
