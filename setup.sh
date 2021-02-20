@@ -12,6 +12,7 @@ apt-get -y install zip unzip apt-transport-https
 echo "\033[0;32m"
 echo "> Installing elasticsearch sourcelists"
 echo "\033[0m"
+
 wget -qO - https://artifacts.elastic.co/GPG-KEY-elasticsearch | sudo apt-key add -
 echo "deb https://artifacts.elastic.co/packages/7.x/apt stable main" | sudo tee /etc/apt/sources.list.d/elastic-7.x.list
 apt-get update
@@ -20,12 +21,14 @@ apt-get update
 echo "\033[0;32m"
 echo "> Installing apache, php74, mysql and elasticsearch"
 echo "\033[0m"
+
 apt-get -y install apache2 php7.4 php7.4-mbstring php7.4-intl php7.4-gd php7.4-xml php7.4-curl mysql-server openjdk-8-jdk elasticsearch
 
-# reloadi elasticsearch
+# reload elasticsearch
 echo "\033[0;32m"
 echo "> Reloading elasticsearch"
 echo "\033[0m"
+
 sudo /bin/systemctl daemon-reload
 sudo /bin/systemctl enable elasticsearch.service
 
@@ -33,6 +36,7 @@ sudo /bin/systemctl enable elasticsearch.service
 echo "\033[0;32m"
 echo "> Making Magento PHP config amends (per https://devdocs.magento.com/guides/v2.4/install-gde/prereq/php-settings.html)"
 echo "\033[0m"
+
 touch /etc/php/7.4/apache2/conf.d/50-magento.ini
 
 echo "realpath_cache_size=10M" >> /etc/php/7.4/apache2/conf.d/50-magento.ini
@@ -45,12 +49,14 @@ echo "opcache.save_comments=1" >> /etc/php/7.4/apache2/conf.d/50-magento.ini
 echo "\033[0;32m"
 echo "> Enabling apache mods"
 echo "\033[0m"
+
 a2enmod rewrite proxy_http
 
 # install composer
 echo "\033[0;32m"
 echo "> Installing composer"
 echo "\033[0m"
+
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 sudo php composer-setup.php --install-dir=/usr/bin --filename=composer
 php -r "unlink('composer-setup.php');"
@@ -59,6 +65,7 @@ php -r "unlink('composer-setup.php');"
 echo "\033[0;32m"
 echo "> Making Magento apache amends (per https://devdocs.magento.com/guides/v2.4/install-gde/prereq/apache.html)"
 echo "\033[0m"
+
 rm /var/www/html/index.html
 
 mv /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf.backup
@@ -85,6 +92,7 @@ echo "</VirtualHost>" >> /etc/apache2/sites-available/000-default.conf
 echo "\033[0;32m"
 echo "> Configuring firewall"
 echo "\033[0m"
+
 ufw allow "Apache Full"
 
 echo "\033[0;32m"
