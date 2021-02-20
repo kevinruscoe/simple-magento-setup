@@ -13,7 +13,7 @@ apt-get update
 
 # install software
 echo "\033[0;32m> Installing apache, php74, mysql and elasticsearch\033[0m"
-apt-get -y install apache2 php7.4 php7.4-common mysql-server openjdk-8-jdk elasticsearch
+apt-get -y install apache2 php7.4 php7.4-common php7.4-dom php7.4-curl mysql-server openjdk-8-jdk elasticsearch
 
 # reloadi elasticsearch
 echo "\033[0;32m> Reloaing elasticsearch\033[0m"
