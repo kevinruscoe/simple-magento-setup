@@ -22,7 +22,7 @@ echo "\033[0;32m"
 echo "> Installing apache, php74, mysql and elasticsearch"
 echo "\033[0m"
 
-apt-get -y install apache2 php7.4 php7.4-mysql php7.4-soap php7.4-zip php7.4-mbstring php7.4-intl php7.4-gd php7.4-xml php7.4-curl mysql-server openjdk-8-jdk elasticsearch
+apt-get -y install apache2 php7.4 php7.4-mysql php7.4-bcmath php7.4-soap php7.4-zip php7.4-mbstring php7.4-intl php7.4-gd php7.4-xml php7.4-curl mysql-server openjdk-8-jdk elasticsearch
 
 # reload elasticsearch
 echo "\033[0;32m"
@@ -31,6 +31,7 @@ echo "\033[0m"
 
 sudo /bin/systemctl daemon-reload
 sudo /bin/systemctl enable elasticsearch.service
+sudo /bin/systemctl start elasticsearch.service
 
 # add PHP config changes, per https://devdocs.magento.com/guides/v2.4/install-gde/prereq/php-settings.html
 echo "\033[0;32m"
@@ -74,18 +75,18 @@ touch /etc/apache2/sites-available/000-default.conf
 
 echo "Listen 8080" >> /etc/apache2/sites-available/000-default.conf
 echo "<VirtualHost *:80>" >> /etc/apache2/sites-available/000-default.conf
-echo "\tServerAdmin webmaster@localhost" >> /etc/apache2/sites-available/000-default.conf
-echo "\tDocumentRoot /var/www/html" >> /etc/apache2/sites-available/000-default.conf
-echo '\tErrorLog ${APACHE_LOG_DIR}/error.log' >> /etc/apache2/sites-available/000-default.conf
-echo '\tCustomLog /${APACHE_LOG_DIR}/access.log combined' >> /etc/apache2/sites-available/000-default.conf
-echo '\tAllowEncodedSlashes NoDecode' >> /etc/apache2/sites-available/000-default.conf
-echo '\t<Directory "/var/www/html">' >> /etc/apache2/sites-available/000-default.conf
-echo "\t\tAllowOverride All" >> /etc/apache2/sites-available/000-default.conf
-echo "\t</Directory>" >> /etc/apache2/sites-available/000-default.conf
+echo "    ServerAdmin webmaster@localhost" >> /etc/apache2/sites-available/000-default.conf
+echo "    DocumentRoot /var/www/html" >> /etc/apache2/sites-available/000-default.conf
+echo '    ErrorLog ${APACHE_LOG_DIR}/error.log' >> /etc/apache2/sites-available/000-default.conf
+echo '    CustomLog /${APACHE_LOG_DIR}/access.log combined' >> /etc/apache2/sites-available/000-default.conf
+echo '    AllowEncodedSlashes NoDecode' >> /etc/apache2/sites-available/000-default.conf
+echo '    <Directory "/var/www/html">' >> /etc/apache2/sites-available/000-default.conf
+echo "        AllowOverride All" >> /etc/apache2/sites-available/000-default.conf
+echo "    </Directory>" >> /etc/apache2/sites-available/000-default.conf
 echo "</VirtualHost>" >> /etc/apache2/sites-available/000-default.conf
 echo "<VirtualHost *:8080>" >> /etc/apache2/sites-available/000-default.conf
-echo '\tProxyPass "/" "http://localhost:9200/"' >> /etc/apache2/sites-available/000-default.conf
-echo '\tProxyPassReverse "/" "http://localhost:9200/"' >> /etc/apache2/sites-available/000-default.conf
+echo '    ProxyPass "/" "http://localhost:9200/"' >> /etc/apache2/sites-available/000-default.conf
+echo '    ProxyPassReverse "/" "http://localhost:9200/"' >> /etc/apache2/sites-available/000-default.conf
 echo "</VirtualHost>" >> /etc/apache2/sites-available/000-default.conf
 
 # ufw
@@ -112,7 +113,7 @@ echo "> 2. Install Mangeto via composer"
 echo "> READ: https://devdocs.magento.com/guides/v2.4/install-gde/composer.html#get-the-metapackage"
 echo "> You'll need to go to https://marketplace.magento.com/customer/accessKeys/ to get your access keys"
 echo "> run"
-echo "composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition /var/www/html"
+echo "composer create-project --quiet --repository-url=https://repo.magento.com/ magento/project-community-edition /var/www/html"
 echo ""
 
 echo "> 3. Clean up permissions"
