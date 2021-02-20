@@ -20,7 +20,7 @@ apt-get update
 echo "\033[0;32m"
 echo "> Installing apache, php74, mysql and elasticsearch"
 echo "\033[0m"
-apt-get -y install apache2 php7.4 php7.4-mbstring php7.4-intl php7.4-gd php7.4-dom php7.4-curl mysql-server openjdk-8-jdk elasticsearch
+apt-get -y install apache2 php7.4 php7.4-mbstring php7.4-intl php7.4-gd php7.4-xml php7.4-curl mysql-server openjdk-8-jdk elasticsearch
 
 # reloadi elasticsearch
 echo "\033[0;32m"
