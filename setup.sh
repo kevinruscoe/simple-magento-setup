@@ -46,13 +46,6 @@ echo "date.timezone=Europe/London" >> /etc/php/7.4/apache2/conf.d/50-magento.ini
 echo "memory_limit=2G" >> /etc/php/7.4/apache2/conf.d/50-magento.ini
 echo "opcache.save_comments=1" >> /etc/php/7.4/apache2/conf.d/50-magento.ini
 
-# reload apache
-echo "\033[0;32m"
-echo "> Enabling apache mods"
-echo "\033[0m"
-
-a2enmod rewrite proxy_http
-
 # install composer
 echo "\033[0;32m"
 echo "> Installing composer"
@@ -62,10 +55,12 @@ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 sudo php composer-setup.php --install-dir=/usr/bin --filename=composer
 php -r "unlink('composer-setup.php');"
 
-# apache changes
+# Apache changes
 echo "\033[0;32m"
 echo "> Making Magento apache amends (per https://devdocs.magento.com/guides/v2.4/install-gde/prereq/apache.html)"
 echo "\033[0m"
+
+a2enmod rewrite proxy_http
 
 rm /var/www/html/index.html
 
@@ -88,6 +83,8 @@ echo "<VirtualHost *:8080>" >> /etc/apache2/sites-available/000-default.conf
 echo '    ProxyPass "/" "http://localhost:9200/"' >> /etc/apache2/sites-available/000-default.conf
 echo '    ProxyPassReverse "/" "http://localhost:9200/"' >> /etc/apache2/sites-available/000-default.conf
 echo "</VirtualHost>" >> /etc/apache2/sites-available/000-default.conf
+
+service apache2 restart
 
 # ufw
 echo "\033[0;32m"
@@ -127,7 +124,7 @@ echo "chmod u+x bin/magento"
 echo ""
 
 echo "> 4. Setup Magento"
-echo "3. READ: https://devdocs.magento.com/guides/v2.4/install-gde/composer.html#install-magento"
+echo "> READ: https://devdocs.magento.com/guides/v2.4/install-gde/composer.html#install-magento"
 echo "> run"
 echo 'bin/magento setup:install \'
 echo '--base-url=http://YOUR_IP_ADDRESS/ \'
@@ -144,5 +141,26 @@ echo '--language=en_GB \'
 echo '--currency=GBP \'
 echo '--timezone=Europe/London \'
 echo '--use-rewrites=1'
+echo ""
+
+echo "> 5. Enable Cron"
+echo "> You need to add the www-data cron"
+echo "> run"
+echo 'sudo -u www-data php bin/magento cron:install'
+echo ""
+
+echo "> 6. Other Stuff"
+echo "> 6.1 Disable 2FA"
+echo "> Mangeto now comes with 2FA out of the box. If you need to disable it."
+echo "> run"
+echo 'bin/magento module:disable Magento_TwoFactorAuth'
+echo 'bin/magento setup:di:compile'
+echo ""
+
+echo "> 6.2. The Magento docs recommends install ntp"
+echo "> run"
+echo 'apt-get -y install ntp'
+echo '> Hit Y during installation'
+echo ""
 
 echo "\033[0m"
