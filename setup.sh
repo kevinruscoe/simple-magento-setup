@@ -1,3 +1,11 @@
+# get vars
+echo "\033[0;32m"
+echo "First things first, you need your magento access keys. Go to https://marketplace.magento.com/customer/accessKeys/ and get them."
+echo "\033[0m"
+
+read -p "Enter public key: " pubkey
+read -p "Enter private key: " privkey
+
 # update
 apt-get update
 
@@ -56,7 +64,7 @@ sudo php composer-setup.php --install-dir=/usr/bin --filename=composer
 php -r "unlink('composer-setup.php');"
 
 export COMPOSER_ALLOW_SUPERUSER=1
-xargs -a keys.txt composer config --global http-basic.repo.magento.com
+composer config --global http-basic.repo.magento.com $pubkey $privkey
 
 # Apache changes
 echo "\033[0;32m"
@@ -89,7 +97,7 @@ echo "</VirtualHost>" >> /etc/apache2/sites-available/000-default.conf
 
 service apache2 restart
 
-# create mysql
+# create database
 echo "\033[0;32m"
 echo "> Creating database"
 echo "\033[0m"
