@@ -102,13 +102,7 @@ echo "\033[0;32m"
 echo "> Creating database"
 echo "\033[0m"
 
-touch query.sql
-echo "CREATE DATABASE magento;" >> query.sql
-echo "CREATE USER 'magento'@'localhost' IDENTIFIED BY 'magento';"  >> query.sql
-echo "GRANT ALL ON magento.* TO 'magento'@'localhost';"  >> query.sql
-echo "FLUSH PRIVILEGES;"  >> query.sql
-mysql -u root < query.sql
-rm query.sql
+mysql -u root -e "CREATE DATABASE magento; CREATE USER 'magento'@'localhost' IDENTIFIED BY 'magento'; GRANT ALL ON magento.* TO 'magento'@'localhost'; FLUSH PRIVILEGES;"
 
 # ufw
 echo "\033[0;32m"
