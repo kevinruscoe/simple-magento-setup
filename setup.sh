@@ -6,6 +6,9 @@ echo "\033[0m"
 read -p "Enter public key: " pubkey
 read -p "Enter private key: " privkey
 
+# get ip
+ip="http://"$(curl -s https://ipinfo.io/ip)"/"
+
 # update
 apt-get update
 
@@ -122,51 +125,27 @@ chown -R www-data:www-data .
 chmod u+x bin/magento
 
 # install magento
+bin/magento setup:install --base-url=$ip --db-host=localhost --db-name=magento --db-user=magento --db-password=magento --admin-firstname=admin --admin-lastname=admin --admin-email=admin@admin.com --admin-user=admin --admin-password=admin123 --language=en_GB --currency=GBP --timezone=Europe/London --use-rewrites=1
+
+sudo -u www-data php /var/www/html/bin/magento cron:install
+
 echo "\033[0;32m"
-echo "> Hello! All ready to install!"
-
-echo "> 1. Setup Magento"
-echo "> READ: https://devdocs.magento.com/guides/v2.4/install-gde/composer.html#install-magento"
-echo "> run"
-echo 'bin/magento setup:install \'
-echo '--base-url=http://YOUR_IP_ADDRESS/ \'
-echo '--db-host=localhost \'
-echo '--db-name=magento \'
-echo '--db-user=magento \'
-echo '--db-password=magento \'
-echo '--admin-firstname=admin \'
-echo '--admin-lastname=admin \'
-echo '--admin-email=admin@admin.com \'
-echo '--admin-user=admin \'
-echo '--admin-password=admin123 \'
-echo '--language=en_GB \'
-echo '--currency=GBP \'
-echo '--timezone=Europe/London \'
-echo '--use-rewrites=1'
+echo "> Hello! All donem however take a look at the optional Stuff"
 echo ""
 
-echo "> 2. Enable Cron"
-echo "> You need to add the www-data cron."
-echo "> run"
-echo 'sudo -u www-data php bin/magento cron:install'
-echo ""
-
-echo "> 3. Optional Stuff"
-echo ""
-
-echo "> 3.1 Disable admin 2FA"
+echo "> 1. Disable admin 2FA"
 echo "> run"
 echo 'bin/magento module:disable Magento_TwoFactorAuth'
 echo 'bin/magento setup:di:compile'
 echo ""
 
-echo "> 3.2. Install ntp"
+echo "> 2. Install ntp"
 echo "> run"
 echo 'apt-get -y install ntp'
 echo '> Hit Y during installation'
 echo ""
 
-echo "> 3.3. Sample data"
+echo "> 3. Sample data"
 echo "> run"
 echo "bin/magento sampledata:deploy"
 echo "bin/magento setup:upgrade"
