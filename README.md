@@ -1,7 +1,8 @@
 # simple-magento-setup
 
-Create a file named keys and add your magento market keys
-```
+Create a file named keys and add your magento market keys.txt
+
+```keys.txt
 <yourkey>
 <yourpassword>
 ```
