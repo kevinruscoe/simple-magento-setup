@@ -55,6 +55,9 @@ php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
 sudo php composer-setup.php --install-dir=/usr/bin --filename=composer
 php -r "unlink('composer-setup.php');"
 
+export COMPOSER_ALLOW_SUPERUSER=1
+xargs -a keys.txt composer config --global http-basic.repo.magento.com
+
 # Apache changes
 echo "\033[0;32m"
 echo "> Making Magento apache amends (per https://devdocs.magento.com/guides/v2.4/install-gde/prereq/apache.html)"
@@ -88,7 +91,7 @@ service apache2 restart
 
 # create mysql
 echo "\033[0;32m"
-echo "> Create database"
+echo "> Creating database"
 echo "\033[0m"
 
 touch query.sql
@@ -107,27 +110,20 @@ echo "\033[0m"
 ufw allow "Apache Full"
 
 # install magento
+composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition /var/www/html
+
+# fix permissions
+cd /var/www/html/
+find var generated vendor pub/static pub/media app/etc -type f -exec chmod g+w {} +
+find var generated vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} +
+chown -R www-data:www-data .
+chmod u+x bin/magento
+
+# install magento
 echo "\033[0;32m"
-echo "> Hello! You might want to copy the following to a text doc because composer's output is massive. However, there are a few things YOU need to do"
+echo "> Hello! All ready to install!"
 
-echo "> 1. Install Mangeto via composer"
-echo "> READ: https://devdocs.magento.com/guides/v2.4/install-gde/composer.html#get-the-metapackage"
-echo "> You'll need to go to https://marketplace.magento.com/customer/accessKeys/ to get your access keys"
-echo "> run"
-echo "composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition /var/www/html"
-echo ""
-
-echo "> 2. Clean up permissions"
-echo "> READ: https://devdocs.magento.com/guides/v2.4/install-gde/composer.html#set-file-permissions"
-echo "> run"
-echo "cd /var/www/html/"
-echo "find var generated vendor pub/static pub/media app/etc -type f -exec chmod g+w {} +"
-echo "find var generated vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} +"
-echo "chown -R www-data:www-data . # Ubuntu"
-echo "chmod u+x bin/magento"
-echo ""
-
-echo "> 3. Setup Magento"
+echo "> 1. Setup Magento"
 echo "> READ: https://devdocs.magento.com/guides/v2.4/install-gde/composer.html#install-magento"
 echo "> run"
 echo 'bin/magento setup:install \'
@@ -147,28 +143,28 @@ echo '--timezone=Europe/London \'
 echo '--use-rewrites=1'
 echo ""
 
-echo "> 4. Enable Cron"
+echo "> 2. Enable Cron"
 echo "> You need to add the www-data cron."
 echo "> run"
 echo 'sudo -u www-data php bin/magento cron:install'
 echo ""
 
-echo "> 5. Optional Stuff"
+echo "> 3. Optional Stuff"
 echo ""
 
-echo "> 5.1 Disable admin 2FA"
+echo "> 3.1 Disable admin 2FA"
 echo "> run"
 echo 'bin/magento module:disable Magento_TwoFactorAuth'
 echo 'bin/magento setup:di:compile'
 echo ""
 
-echo "> 5.2. Install ntp"
+echo "> 3.2. Install ntp"
 echo "> run"
 echo 'apt-get -y install ntp'
 echo '> Hit Y during installation'
 echo ""
 
-echo "> 5.3. Sample data"
+echo "> 3.3. Sample data"
 echo "> run"
 echo "bin/magento sampledata:deploy"
 echo "bin/magento setup:upgrade"
