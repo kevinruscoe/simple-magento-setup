@@ -129,6 +129,8 @@ bin/magento setup:install --base-url=$ip --db-host=localhost --db-name=magento -
 
 sudo -u www-data php /var/www/html/bin/magento cron:install
 
+cp ~/.config/composer/auth.json /var/www/html/auth.json
+
 echo "\033[0;32m"
 echo "> Hello! All donem however take a look at the optional Stuff"
 echo ""
