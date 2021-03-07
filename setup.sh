@@ -132,8 +132,15 @@ sudo -u www-data php /var/www/html/bin/magento cron:install
 cp ~/.config/composer/auth.json /var/www/html/var/composer_home/auth.json
 cp ~/.config/composer/auth.json /var/www/html/auth.json
 
+# fix permissions ... again
+cd /var/www/html/
+find var generated vendor pub/static pub/media app/etc -type f -exec chmod g+w {} +
+find var generated vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} +
+chown -R www-data:www-data .
+chmod u+x bin/magento
+
 echo "\033[0;32m"
-echo "> Hello! All donem however take a look at the optional Stuff"
+echo "> Hello! All done however take a look at the optional Stuff"
 echo ""
 
 echo "> 1. Disable admin 2FA"
